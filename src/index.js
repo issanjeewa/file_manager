@@ -2,7 +2,7 @@ import readline from 'readline';
 import { stdin, stdout } from 'process';
 import path from 'path';
 import os from 'os';
-import { cdFunc } from './util.js';
+import { cdFunc, lsFunc } from './util.js';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -47,6 +47,10 @@ const fileManager = async () => {
 
         const dir = args[0];
         currentDir = (await cdFunc(currentDir, dir)) || currentDir;
+        break;
+
+      case 'ls':
+        await lsFunc(currentDir);
         break;
 
       default:
