@@ -1,5 +1,8 @@
 import readline from 'readline';
 import { stdin, stdout } from 'process';
+import fs from 'fs/promises';
+import path from 'path';
+import os from 'os';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -7,17 +10,49 @@ const fileManager = async () => {
   const args = process.argv.slice(2);
   const username =
     args?.find((arg) => arg.startsWith('--username='))?.split('=')[1] ||
-    'guest';
+    'Anonymous';
 
-  let currentDir = process.cwd();
+  let currentDir = os.homedir();
 
   console.log(`Welcome to the File Manager, ${username}!`);
+
+  console.log(`You are currently in ${currentDir}`);
+
+  rl.setPrompt(`> `);
+  rl.prompt();
+
+  rl.on('line', async (input) => {
+    const [command, ...args] = input.trim().split(' ');
+
+    switch (command) {
+      case '':
+        break;
+
+      case '.exit':
+        console.log(
+          `\nThank you for using File Manager, ${username}, goodbye!`
+        );
+        rl.close();
+        break;
+
+      case 'up':
+        currentDir = path.resolve(currentDir, '..');
+        break;
+
+      default:
+        console.log(`Invalid input`);
+        break;
+    }
+
+    console.log(`You are currently in ${currentDir}`);
+    rl.prompt();
+  });
+
+  rl.on('close', () => process.exit(0));
 
   process.on('SIGINT', () => {
     console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
     rl.close();
-
-    setTimeout(() => process.exit(0), 100);
   });
 };
 
