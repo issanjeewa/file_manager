@@ -2,7 +2,7 @@ import readline from 'readline';
 import { stdin, stdout } from 'process';
 import path from 'path';
 import os from 'os';
-import { catFunc, cdFunc, lsFunc } from './util.js';
+import { addFunc, catFunc, cdFunc, lsFunc } from './util.js';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -59,6 +59,14 @@ const fileManager = async () => {
           break;
         }
         await catFunc(currentDir, args[0]);
+        break;
+
+      case 'add':
+        if (!args.length) {
+          console.log(`Invalid input`);
+          break;
+        }
+        await addFunc(currentDir, args[0]);
         break;
 
       default:

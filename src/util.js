@@ -62,4 +62,17 @@ const catFunc = async (currentDir, fileName) => {
   }
 };
 
-export { cdFunc, lsFunc, catFunc };
+const addFunc = async (currentDir, fileName) => {
+  const filePath = path.isAbsolute(fileName)
+    ? fileName
+    : path.resolve(currentDir, fileName);
+
+  try {
+    await fs.writeFile(filePath, '', { flag: 'wx' });
+  } catch (error) {
+    if (error.code === 'EEXIST') console.log('File already exists');
+    else console.log(`Error while creating file: ${error?.message}`);
+  }
+};
+
+export { cdFunc, lsFunc, catFunc, addFunc };
