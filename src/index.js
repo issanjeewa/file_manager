@@ -2,7 +2,7 @@ import readline from 'readline';
 import { stdin, stdout } from 'process';
 import path from 'path';
 import os from 'os';
-import { addFunc, catFunc, cdFunc, lsFunc } from './util.js';
+import { addFunc, catFunc, cdFunc, lsFunc, mkdirFunc } from './util.js';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -45,7 +45,7 @@ const fileManager = async () => {
           break;
         }
 
-        const dir = args[0];
+        const dir = args.join(' ').trim();
         currentDir = (await cdFunc(currentDir, dir)) || currentDir;
         break;
 
@@ -58,7 +58,7 @@ const fileManager = async () => {
           console.log(`Invalid input`);
           break;
         }
-        await catFunc(currentDir, args[0]);
+        await catFunc(currentDir, args.join(' ').trim());
         break;
 
       case 'add':
@@ -66,7 +66,15 @@ const fileManager = async () => {
           console.log(`Invalid input`);
           break;
         }
-        await addFunc(currentDir, args[0]);
+        await addFunc(currentDir, args.join(' ').trim());
+        break;
+
+      case 'mkdir':
+        if (!args.length) {
+          console.log(`Invalid input`);
+          break;
+        }
+        await mkdirFunc(currentDir, args.join(' ').trim());
         break;
 
       default:

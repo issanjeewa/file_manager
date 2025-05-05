@@ -75,4 +75,20 @@ const addFunc = async (currentDir, fileName) => {
   }
 };
 
-export { cdFunc, lsFunc, catFunc, addFunc };
+const mkdirFunc = async (currentDir, dirName) => {
+  try {
+    const dirPath = path.isAbsolute(dirName)
+      ? dirName
+      : path.resolve(currentDir, dirName);
+
+    await fs.mkdir(dirPath, { recursive: false });
+  } catch (error) {
+    if (error.code === 'EEXIST') {
+      console.log('Directory already exists');
+    } else {
+      console.log('Error while creating directory:', error.message);
+    }
+  }
+};
+
+export { cdFunc, lsFunc, catFunc, addFunc, mkdirFunc };
