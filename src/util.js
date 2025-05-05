@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 const cdFunc = async (currentDir, dir) => {
-  const targetPath = path.isAbsolute(dir) ? dir : path.join(currentDir, dir);
+  const targetPath = path.isAbsolute(dir) ? dir : path.resolve(currentDir, dir);
 
   try {
     const stats = await fs.stat(targetPath);
@@ -43,4 +43,23 @@ const lsFunc = async (currentDir) => {
   }
 };
 
-export { cdFunc, lsFunc };
+const catFunc = async (currentDir, fileName) => {
+  const filePath = path.isAbsolute(fileName)
+    ? fileName
+    : path.resolve(currentDir, fileName);
+
+  try {
+    const stats = await fs.stat(filePath);
+    if (!stats.isFile()) {
+      console.log(`Does not exists: ${filePath}`);
+      return;
+    }
+
+    const fileContent = await fs.readFile(filePath, 'utf-8');
+    console.log(fileContent);
+  } catch (error) {
+    console.log(`Error while reading file: ${error?.message}`);
+  }
+};
+
+export { cdFunc, lsFunc, catFunc };
