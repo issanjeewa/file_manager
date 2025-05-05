@@ -2,9 +2,11 @@ import path from 'path';
 import fs from 'fs/promises';
 
 const cdFunc = async (currentDir, dir) => {
-  const targetPath = path.isAbsolute(dir) ? dir : path.resolve(currentDir, dir);
-
   try {
+    const targetPath = path.isAbsolute(dir)
+      ? dir
+      : path.resolve(currentDir, dir);
+
     const stats = await fs.stat(targetPath);
     if (stats.isDirectory()) {
       return targetPath;
@@ -44,11 +46,11 @@ const lsFunc = async (currentDir) => {
 };
 
 const catFunc = async (currentDir, fileName) => {
-  const filePath = path.isAbsolute(fileName)
-    ? fileName
-    : path.resolve(currentDir, fileName);
-
   try {
+    const filePath = path.isAbsolute(fileName)
+      ? fileName
+      : path.resolve(currentDir, fileName);
+
     const stats = await fs.stat(filePath);
     if (!stats.isFile()) {
       console.log(`Does not exists: ${filePath}`);
@@ -63,11 +65,11 @@ const catFunc = async (currentDir, fileName) => {
 };
 
 const addFunc = async (currentDir, fileName) => {
-  const filePath = path.isAbsolute(fileName)
-    ? fileName
-    : path.resolve(currentDir, fileName);
-
   try {
+    const filePath = path.isAbsolute(fileName)
+      ? fileName
+      : path.resolve(currentDir, fileName);
+
     await fs.writeFile(filePath, '', { flag: 'wx' });
   } catch (error) {
     if (error.code === 'EEXIST') console.log('File already exists');
@@ -91,4 +93,18 @@ const mkdirFunc = async (currentDir, dirName) => {
   }
 };
 
-export { cdFunc, lsFunc, catFunc, addFunc, mkdirFunc };
+const renameFunc = async (currentDir, filePath, newName) => {
+  try {
+    const originalFile = path.isAbsolute(filePath)
+      ? filePath
+      : path.resolve(currentDir, filePath);
+
+    const dstPath = path.join(path.dirname(originalFile), newName);
+
+    await fs.rename(originalFile, dstPath);
+  } catch (error) {
+    console.log(`Error while renaming: ${error?.message}`);
+  }
+};
+
+export { cdFunc, lsFunc, catFunc, addFunc, mkdirFunc, renameFunc };

@@ -2,7 +2,14 @@ import readline from 'readline';
 import { stdin, stdout } from 'process';
 import path from 'path';
 import os from 'os';
-import { addFunc, catFunc, cdFunc, lsFunc, mkdirFunc } from './util.js';
+import {
+  addFunc,
+  catFunc,
+  cdFunc,
+  lsFunc,
+  mkdirFunc,
+  renameFunc,
+} from './util.js';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -75,6 +82,14 @@ const fileManager = async () => {
           break;
         }
         await mkdirFunc(currentDir, args.join(' ').trim());
+        break;
+
+      case 'rn':
+        if (args.length < 2) {
+          console.log(`Invalid input`);
+          break;
+        }
+        await renameFunc(currentDir, args[0], args.slice(1).join(' '));
         break;
 
       default:
