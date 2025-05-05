@@ -1,8 +1,8 @@
 import readline from 'readline';
 import { stdin, stdout } from 'process';
-import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { cdFunc } from './util.js';
 
 const fileManager = async () => {
   const rl = readline.createInterface({ input: stdin, output: stdout });
@@ -37,6 +37,16 @@ const fileManager = async () => {
 
       case 'up':
         currentDir = path.resolve(currentDir, '..');
+        break;
+
+      case 'cd':
+        if (args.length === 0) {
+          console.log(`Invalid input`);
+          break;
+        }
+
+        const dir = args[0];
+        currentDir = (await cdFunc(currentDir, dir)) || currentDir;
         break;
 
       default:
